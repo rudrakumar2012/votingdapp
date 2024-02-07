@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import abi from "./contractJson/Voting.json"
 import { ethers } from 'ethers';
 import Login from "./Components/Login";
-import Connected from "./Components/Connected"
+import Connected from "./Components/Connected";
+import Finished from "./Components/Finished";
 
 function App() {
   const VotingContractAddress = "0x10A70eF4BC9514f908ee0F862f58260245532fFA";
@@ -159,7 +160,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-1F2544 via-474F7A to-81689D flex flex-col justify-center items-center">
-      {isConnected ? (
+      { VotingStatus ? (isConnected ? (
         <Connected
           account={account}
           candidates={candidates}
@@ -171,7 +172,7 @@ function App() {
         />
       ) : (
         <Login connectWallet={connectToMetamask} />
-      )}
+      )) : (<Finished />)}
     </div>
   )
 }
