@@ -5,7 +5,7 @@ import Login from "./Components/Login";
 import Connected from "./Components/Connected"
 
 function App() {
-  const VotingContractAddress = "0xC07d5Eb6b92ae853151BFA093334048A7c541b77";
+  const VotingContractAddress = "0x10A70eF4BC9514f908ee0F862f58260245532fFA";
   const VotingAbi = abi.abi;
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
@@ -17,7 +17,7 @@ function App() {
   const [CanVote, setCanVote] = useState(true);
 
    // Initialize provider only if it hasn't been initialized yet
-   useEffect(() => {
+  useEffect(() => {
     if (!provider && window.ethereum) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       setProvider(provider);
@@ -33,7 +33,7 @@ function App() {
       getCandidates();
     }
   }, [provider]);
-  
+
   useEffect(() => {
     // Set up account change listener
     if (window.ethereum) {
@@ -52,14 +52,14 @@ function App() {
   }, []); // <-- Empty dependency array to run only once
 
   function handleAccountsChanged(accounts) {
-    if (accounts.length > 0 && account !== accounts[0]) {
+    if (accounts.length >  0 && account !== accounts[0]) {
       setAccount(accounts[0]);
-      canVote();
+      canVote(); // Make sure provider is initialized before calling canVote
     } else {
       setIsConnected(false);
       setAccount(null);
     }
-  }
+  }  
 
   async function vote() {
     await provider.send("eth_requestAccounts", []);
@@ -73,6 +73,13 @@ function App() {
   }
 
   async function canVote() {
+    if (!provider) {
+      // If provider is null, initialize it
+      const newProvider = new ethers.providers.Web3Provider(window.ethereum);
+      setProvider(newProvider); // Update the state with the new provider
+    }
+  
+    // Now use the provider state directly, which will be updated after the state update
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const contractInstance = new ethers.Contract(
@@ -80,7 +87,8 @@ function App() {
     );
     const voteStatus = await contractInstance.voters(await signer.getAddress());
     setCanVote(voteStatus);
-  }
+  }  
+  
 
   async function getCandidates() {
     if (provider) {
@@ -139,7 +147,6 @@ function App() {
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         setAccount(address);
-        console.log("Metamask Connected: " + address);
         setIsConnected(true);
         canVote();
       } catch (error) {
@@ -151,7 +158,7 @@ function App() {
 }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex flex-col justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-br from-1F2544 via-474F7A to-81689D flex flex-col justify-center items-center">
       {isConnected ? (
         <Connected
           account={account}
@@ -162,7 +169,7 @@ function App() {
           voteFunction={vote}
           showButton={CanVote}
         />
-        ) : (
+      ) : (
         <Login connectWallet={connectToMetamask} />
       )}
     </div>

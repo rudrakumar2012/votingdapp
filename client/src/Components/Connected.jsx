@@ -3,16 +3,16 @@ import { useState } from 'react';
 
 const Connected = ({ account, RemainingTime, candidates, selectedCandidateIndex, handleNumberChange, voteFunction, showButton }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex flex-col justify-center items-center">
-      <div className="w-full max-w-2xl p-8 bg-white shadow-lg rounded-lg">
-        <h1 className="text-4xl font-extrabold text-center text-blue-900 mb-8">Welcome to Voting Dapp</h1>
+    <div className="min-h-screen flex flex-col justify-center items-center">
+      <div className="w-full max-w-2xl p-8 bg-FFD0EC shadow-lg rounded-lg">
+        <h1 className="text-4xl font-extrabold text-center text-1F2544 mb-8">You are connected to Metamask</h1>
         <p className="mb-4">Metamask Account: {account}</p>
         <p className="mb-4">Remaining Time: {RemainingTime}</p>
         <div className="flex space-x-4">
           {showButton ? (
-            <p className="mb-4">Ypu have already voted</p>
+            <p className="mb-4">You have already voted</p>
           ) : (
-            <div>
+            <div className="flex space-x-4">
               <input
                 type="number"
                 placeholder="Enter Candidate Index"
@@ -22,19 +22,19 @@ const Connected = ({ account, RemainingTime, candidates, selectedCandidateIndex,
               />
               <button
                 onClick={() => voteFunction(selectedCandidateIndex)}
-                className="py-2 px-4 bg-blue-900 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                className="py-2 px-4 bg-1F2544 hover:bg-474F7A text-white font-bold rounded focus:outline-none focus:ring-2 focus:ring-1F2544 focus:ring-opacity-50"
               >
                 Vote
               </button>
-                </div>
+            </div>
           )}
         </div>
         <table className="mt-8 w-full text-left border-collapse">
           <thead>
             <tr>
-              <th className="border border-gray-300 p-2">Index</th>
-              <th className="border border-gray-300 p-2">Candidate Name</th>
-              <th className="border border-gray-300 p-2">Candidate Votes</th>
+              <th className="border border-gray-300 p-2 bg-474F7A text-white">Index</th>
+              <th className="border border-gray-300 p-2 bg-474F7A text-white">Candidate Name</th>
+              <th className="border border-gray-300 p-2 bg-474F7A text-white">Candidate Votes</th>
             </tr>
           </thead>
           <tbody>
