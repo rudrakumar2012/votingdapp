@@ -10,6 +10,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-deep-navy: #1f2544;
+  --color-muted-blue: #474f7a;
+  --color-soft-purple: #81689d;
+  --color-light-pink: #ffd0ec;
 }
 
 @media (prefers-color-scheme: dark) {
