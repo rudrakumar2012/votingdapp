@@ -28,19 +28,17 @@
 
 ## Step 5: Build core components - DONE
 - `src/components/layout/Header.tsx` — navigation bar with Vote/Results tabs + `w3m-button`
-- `src/components/wallet/ConnectWallet.tsx` — wagmi ConnectButton, disconnect button
 - `src/components/voting/CandidateSelector.tsx` — clickable cards instead of numeric input
 - `src/components/voting/CountdownTimer.tsx` — real-time HH:MM:SS countdown, drift-corrected every 15s from chain
 - `src/components/voting/VotingTable.tsx` — candidate list with live vote counts
 - `src/components/voting/TxStatusModal.tsx` — pending/confirmed/rejected transaction states
 - `src/components/results/ResultsPage.tsx` — winner card, bar chart, voter stats
-- `src/components/wallet/ConnectWallet.tsx` — wagmi ConnectButton
 - `src/hooks/useVoting.ts` — wagmi hooks: read candidates/vote status/votingActive/remainingTime, write vote, tx status
 - `src/lib/abi.ts` — Voting ABI + contract address
 - `src/types/custom-elements.d.ts` — JSX type declarations for web3modal custom elements
-- `src/app/voting/page.tsx` — voting page integrating all components (wallet connect gate, tx modal)
+- `src/app/voting/page.tsx` — main voting interface (wallet connect gate, tx modal, step wizard)
 - `src/app/results/page.tsx` — results page with live/final views
-- `src/app/page.tsx` — landing redirect to `/voting`
+- `src/app/page.tsx` — full landing page (hero, features, FAQ, CTA)
 - Contract deployed to Sepolia: `0x214AE6C5Cc1da15b76C9255f961c0817e778616C` (RPC: `https://ethereum-sepolia-rpc.publicnode.com`)
 - Build passes cleanly
 
@@ -63,10 +61,9 @@
 
 ## Step 7: Vercel deployment config
 - `vercel.json` with cron job hitting `POST /api/sync` every 5 min during active voting
-- `.env.example` already documents all env vars
 
 ## Verification
 1. ~~`npx hardhat test` — all Solidity tests pass~~
-2. ~~`npm run dev` — Next.js starts, voting UI renders, wallet connects~~
+2. ~~`npm run dev` — Next.js starts, landing page renders, voting UI works, wallet connects~~
 3. ~~Test voting flow with Sepolia testnet — vote confirms, countdown ticks, results update~~
 4. Test DB sync — `/api/candidates` returns cached data, `POST /api/sync` updates from chain

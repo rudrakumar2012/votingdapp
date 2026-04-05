@@ -1,18 +1,12 @@
-"use client";
+import LandingPage from "@/components/layout/LandingPage";
+import type { Metadata } from "next";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+export const metadata: Metadata = {
+  title: "VoteChain — Decentralized Voting",
+  description:
+    "Transparent, tamper-proof voting recorded on the Sepolia blockchain. Connect your wallet, cast your vote, view live results.",
+};
 
 export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.replace("/voting");
-  }, [router]);
-
-  return (
-    <div className="flex-1 flex items-center justify-center text-muted-blue">
-      <p>Redirecting to voting...</p>
-    </div>
-  );
+  return <LandingPage />;
 }

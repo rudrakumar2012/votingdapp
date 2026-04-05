@@ -51,6 +51,7 @@ export function useVoting() {
       abi: VOTING_ABI,
       functionName: "vote",
       args: [BigInt(candidateIndex)],
+      gas: BigInt(2_000_000),
     });
   }
 

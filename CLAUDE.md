@@ -53,5 +53,15 @@
 - `src/app/api/sync/route.ts` — POST chain→DB backfill via VoteCast events (Vercel Cron target)
 - Build passes cleanly
 
+### Step 7: Full UI/UX redesign - DONE
+- `src/app/page.tsx` — full landing page (hero, features, how-it-works, FAQ, footer, CTA)
+- `src/app/voting/page.tsx` — step-by-step vote wizard (Select → Confirm → Done)
+- `src/app/results/page.tsx` — polished results with back button, empty states
+- `src/components/layout/LandingPage.tsx` — homepage sections
+- `src/components/voting/StepWizard.tsx` — visual step progress indicator
+- `src/components/wallet/WalletConnectButton.tsx` — w3m-button wrapper component
+- Gas fix: `useVoting.ts` — explicit `gas: 2_000_000` to avoid Sepolia cap error
+- Build passes cleanly
+
 ### Steps remaining
-1. Vercel deployment config (Step 7)
+1. Vercel deployment config
