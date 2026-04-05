@@ -26,7 +26,24 @@
 - `.env.example` — all env vars documented (WalletConnect ID, RPC URL, contract address, private key, Etherscan, Neon DB)
 - Build passes successfully
 
-## Step 5: Build core components
+## Step 5: Build core components - DONE
+- `src/components/layout/Header.tsx` — navigation bar with Vote/Results tabs + `w3m-button`
+- `src/components/wallet/ConnectWallet.tsx` — disconnect button
+- `src/components/voting/CandidateSelector.tsx` — clickable candidate cards with selection highlighting
+- `src/components/voting/CountdownTimer.tsx` — real-time countdown with drift-corrected tick every 1s, re-sync at `initialSeconds` prop change
+- `src/components/voting/VotingTable.tsx` — candidate list with live vote counts, share bars
+- `src/components/voting/TxStatusModal.tsx` — pending/confirming/rejected transaction states + Etherscan link
+- `src/components/results/ResultsPage.tsx` — winner card, bar chart, voter stats, percentage breakdown
+- `src/hooks/useVoting.ts` — wagmi hooks: read candidates/vote status/votingActive/remainingTime, write vote, tx status
+- `src/lib/abi.ts` — Voting ABI + contract address
+- `src/types/custom-elements.d.ts` — JSX type declarations for web3modal custom elements
+- `src/app/voting/page.tsx` — voting page integrating all components (wallet connect gate, tx modal)
+- `src/app/results/page.tsx` — results page with live/final views
+- `src/app/page.tsx` — redirects to `/voting`
+- Contract deployed to Sepolia: `0x214AE6C5Cc1da15b76C9255f961c0817e778616C` (RPC: `https://ethereum-sepolia-rpc.publicnode.com`)
+- Build passes cleanly (only optional peer dep warnings from web3modal/wagmi)
+
+## Step 6: Set up Neon DB & API routes
 - `src/components/wallet/ConnectWallet.tsx` — wagmi ConnectButton
 - `src/components/voting/CandidateSelector.tsx` — clickable cards instead of numeric input
 - `src/components/voting/CountdownTimer.tsx` — real-time HH:MM:SS countdown, drift-corrected every 15s from chain
