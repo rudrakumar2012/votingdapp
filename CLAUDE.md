@@ -42,6 +42,16 @@
 - Contract deployed to Sepolia: `0x214AE6C5Cc1da15b76C9255f961c0817e778616C`
 - Build passes cleanly
 
+### Step 6: Neon DB & API routes - DONE
+- `src/lib/db.ts` — Neon client (`@neondatabase/serverless`)
+- `src/lib/schema.sql` — 4 tables: vote_records, voting_sessions, candidates, sync_state
+- `src/lib/init-db.ts` — one-shot migration + seed script
+- `src/app/api/candidates/route.ts` — GET cached candidates, refetch chain if stale >30s
+- `src/app/api/results/route.ts` — GET vote totals, winner, percentages
+- `src/app/api/voting-status/route.ts` — GET active/remaining from chain
+- `src/app/api/vote/route.ts` — POST record confirmed vote in DB (analytics)
+- `src/app/api/sync/route.ts` — POST chain→DB backfill via VoteCast events (Vercel Cron target)
+- Build passes cleanly
+
 ### Steps remaining
-1. Set up Neon DB & API routes (Step 6)
-2. Vercel deployment config (Step 7)
+1. Vercel deployment config (Step 7)
