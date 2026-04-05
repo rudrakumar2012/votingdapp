@@ -1,26 +1,45 @@
 "use client";
 
-export default function Header({ activePage, onNavigate }: { activePage: "voting" | "results"; onNavigate: (page: "voting" | "results") => void }) {
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import WalletConnectButton from "@/components/wallet/WalletConnectButton";
+
+export default function Header({
+  activePage,
+  onNavigate,
+}: {
+  activePage: "voting" | "results";
+  onNavigate: (page: "voting" | "results") => void;
+}) {
   return (
-    <header className="w-full px-6 py-4 flex items-center justify-between bg-muted-blue/40 backdrop-blur">
-      <h1 className="text-xl font-bold text-light-pink">VoteChain</h1>
-      <nav className="flex gap-2">
-        <button
-          onClick={() => onNavigate("voting")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-            activePage === "voting" ? "bg-soft-purple text-white" : "text-muted-blue hover:text-light-pink"
-          }`}
-        >
-          Vote
-        </button>
-        <button
-          onClick={() => onNavigate("results")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-            activePage === "results" ? "bg-soft-purple text-white" : "text-muted-blue hover:text-light-pink"
-          }`}
-        >
-          Results
-        </button>
+    <header className="w-full px-6 py-4 flex items-center justify-between bg-muted-blue/10 border-b border-muted-blue/20 backdrop-blur-sm">
+      <Link href="/" className="text-xl font-bold text-soft-purple hover:text-soft-purple/80 transition">
+        VoteChain
+      </Link>
+      <nav className="flex items-center gap-3 relative">
+        {(["voting", "results"] as const).map((page) => (
+          <button
+            key={page}
+            onClick={() => onNavigate(page)}
+            className={cn(
+              "px-4 py-2 rounded-lg text-sm font-medium relative transition-colors",
+              activePage === page
+                ? "text-white"
+                : "text-muted-blue hover:text-light-pink",
+            )}
+          >
+            {activePage === page && (
+              <motion.div
+                layoutId="active-nav"
+                className="absolute inset-0 bg-soft-purple rounded-lg -z-10"
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+            )}
+            {page === "voting" ? "Vote" : "Results"}
+          </button>
+        ))}
+        <WalletConnectButton />
       </nav>
     </header>
   );
