@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 
 export default function ResultsPageWrapper() {
   const [page, setPage] = useState<"voting" | "results">("results");
-  const { candidates, loadingCandidates, votingActive } = useVoting();
+  const { candidates, loadingCandidates, votingActive, isEnded } = useVoting();
   const [showTable, setShowTable] = useState(false);
 
   if (loadingCandidates) {
@@ -39,7 +39,7 @@ export default function ResultsPageWrapper() {
       <Header activePage={page} onNavigate={setPage} />
 
       <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-6">
-        {votingActive && !showTable ? (
+        {votingActive && !isEnded && !showTable ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -95,7 +95,7 @@ export default function ResultsPageWrapper() {
           </motion.div>
         ) : (
           <div className="space-y-6">
-            <ResultsPageComponent candidates={candidates} />
+            <ResultsPageComponent candidates={candidates} isEnded={isEnded} />
           </div>
         )}
       </div>

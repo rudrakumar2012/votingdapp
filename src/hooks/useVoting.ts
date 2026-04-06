@@ -38,6 +38,14 @@ export function useVoting() {
     functionName: "getRemainingTime",
   });
 
+  // isEnded flag
+  const { data: isEnded } = useReadContract({
+    address: CONTRACT_ADDRESS as `0x${string}`,
+    abi: VOTING_ABI,
+    functionName: "isEnded",
+    query: { refetchInterval: 10000 },
+  });
+
   // Vote write
   const { writeContract, data: txHash, isPending: txPending, error: txError } = useWriteContract();
 
@@ -65,6 +73,7 @@ export function useVoting() {
     loadingCandidates,
     hasVoted: !!hasVoted,
     votingActive: !!votingActive,
+    isEnded: !!isEnded,
     remainingSeconds: remainingTime ? Number(remainingTime) : 0,
     voteForCandidate,
     txPending,

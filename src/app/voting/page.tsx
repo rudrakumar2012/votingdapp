@@ -29,6 +29,7 @@ export default function VotingPage() {
     loadingCandidates,
     hasVoted,
     votingActive,
+    isEnded,
     remainingSeconds,
     voteForCandidate,
     txPending,
@@ -89,8 +90,26 @@ export default function VotingPage() {
     );
   }
 
-  // Voting ended
-  if (!votingActive) {
+  // Voting ended — show summary with winner info
+  const [endedResults, setEndedResults] = useState<{ winner: string; votes: number; total: number } | null>(null);
+
+  useEffect(() => {
+    if (!votingActive) {
+      fetch("/api/results")
+        .then((r) => r.json())
+        .then((data) =>
+          setEndedResults({
+            winner: data.winner?.name ?? "No votes cast",
+            votes: data.winner?.votes ?? 0,
+            total: data.totalVotes ?? 0,
+          })
+        )
+        .catch(() => setEndedResults({ winner: "Unable to load", votes: 0, total: 0 }));
+    }
+  }, [votingActive]);
+
+  if (!votingActive && !isEnded) {
+    // Time expired but owner hasn't called endVoting() yet
     return (
       <div className="flex-1 flex flex-col">
         <Header activePage={page} onNavigate={setPage} />
@@ -100,15 +119,59 @@ export default function VotingPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="text-center max-w-md mx-auto px-6"
           >
-            <Card className="border-soft-purple/30 bg-soft-purple/5">
+            <Card className="border-yellow-500/30 bg-yellow-500/5">
               <CardContent className="text-center py-10">
-                <FileText className="w-12 h-12 text-soft-purple mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-white mb-2">Voting Has Ended</h2>
+                <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-white mb-2">Time's Up</h2>
                 <p className="text-muted-blue text-sm mb-6">
-                  The voting session is complete. Check out the final results.
+                  The voting period has expired. Waiting for the organizer to close the election.
                 </p>
                 <Link href="/results">
-                  <Button variant="brand">View Results</Button>
+                  <Button variant="brand">View Live Results</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!votingActive && isEnded) {
+    // Officially closed — show winner summary
+    return (
+      <div className="flex-1 flex flex-col">
+        <Header activePage={page} onNavigate={setPage} />
+        <div className="flex-1 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center max-w-md mx-auto px-6"
+          >
+            <Card className="border-soft-purple/30 bg-gradient-to-b from-soft-purple/10 to-deep-navy/50">
+              <CardContent className="text-center py-10 space-y-4">
+                <FileText className="w-12 h-12 text-soft-purple mx-auto" />
+                <h2 className="text-xl font-bold text-white">Voting Ended — Results Are In</h2>
+                {endedResults && endedResults.winner !== "Unable to load" ? (
+                  <div className="space-y-2">
+                    <p className="text-muted-blue text-sm">Winner</p>
+                    <p className="text-2xl font-extrabold text-soft-purple">{endedResults.winner}</p>
+                    <p className="text-muted-blue text-sm">
+                      {endedResults.votes} vote{endedResults.votes !== 1 ? "s" : ""} · {endedResults.total} total cast
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center text-muted-blue text-sm">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-5 h-5 border-2 border-muted-blue/30 border-t-muted-blue rounded-full mr-2"
+                    />
+                    Loading results...
+                  </div>
+                )}
+                <Link href="/results">
+                  <Button variant="brand">View Full Results</Button>
                 </Link>
               </CardContent>
             </Card>

@@ -3,16 +3,17 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Users, Vote, ArrowLeft } from "lucide-react";
+import { Trophy, Users, Vote, ArrowLeft, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import ShareButton from "@/components/results/ShareButton";
 
 interface Candidate {
   name: string;
   voteCount: number;
 }
 
-export default function ResultsPage({ candidates }: { candidates: Candidate[] }) {
+export default function ResultsPage({ candidates, isEnded }: { candidates: Candidate[]; isEnded?: boolean }) {
   const totalVotes = candidates.reduce((sum, c) => sum + c.voteCount, 0);
   const maxVotes = Math.max(...candidates.map((c) => c.voteCount), 0);
   const winner = candidates.find((c) => c.voteCount === maxVotes && c.voteCount > 0);
@@ -40,7 +41,15 @@ export default function ResultsPage({ candidates }: { candidates: Candidate[] })
       {/* Header */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-white mb-1">Election Results</h2>
-        <Badge variant="secondary">{totalVotes} total votes cast</Badge>
+        <div className="flex items-center justify-center gap-2">
+          <Badge variant="secondary">{totalVotes} total votes cast</Badge>
+          {isEnded && (
+            <Badge className="bg-green-600/20 text-green-400 border-green-600/30">
+              <CheckCircle className="w-3 h-3 mr-1" />
+              Final
+            </Badge>
+          )}
+        </div>
       </div>
 
       {/* Winner Card */}
@@ -137,6 +146,9 @@ export default function ResultsPage({ candidates }: { candidates: Candidate[] })
           );
         })}
       </motion.div>
+
+      {/* Share / Export */}
+      <ShareButton candidates={candidates} totalVotes={totalVotes} winner={winner?.name ?? "None"} />
     </div>
   );
 }
