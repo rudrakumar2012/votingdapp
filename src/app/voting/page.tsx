@@ -21,7 +21,6 @@ const STEP_LABELS = ["Select Candidate", "Confirm Vote", "Done"];
 
 export default function VotingPage() {
   const { isConnected } = useAccount();
-  const [page, setPage] = useState<"voting" | "results">("voting");
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const {
     candidates,
@@ -70,7 +69,7 @@ export default function VotingPage() {
   if (!isConnected) {
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage={page} onNavigate={setPage} />
+        <Header activePage="voting" />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -121,7 +120,7 @@ export default function VotingPage() {
     // Time expired but owner hasn't called endVoting() yet
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage={page} onNavigate={setPage} />
+        <Header activePage="voting" />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -150,7 +149,7 @@ export default function VotingPage() {
     // Officially closed — show winner summary
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage={page} onNavigate={setPage} />
+        <Header activePage="voting" />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -194,7 +193,7 @@ export default function VotingPage() {
   if (hasVoted && !txActive) {
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage={page} onNavigate={setPage} />
+        <Header activePage="voting" />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -226,7 +225,7 @@ export default function VotingPage() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <Header activePage={page} onNavigate={setPage} />
+      <Header activePage="voting" />
 
       <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-6 space-y-6">
         {/* Countdown */}

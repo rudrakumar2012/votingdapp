@@ -12,14 +12,13 @@ import { Clock, ArrowRight, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ResultsPageWrapper() {
-  const [page, setPage] = useState<"voting" | "results">("results");
   const { candidates, loadingCandidates, votingActive, isEnded } = useVoting();
   const [showTable, setShowTable] = useState(false);
 
   if (loadingCandidates) {
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage={page} onNavigate={setPage} />
+        <Header activePage="results" />
         <div className="flex-1 flex items-center justify-center text-muted-blue">
           <div className="text-center">
             <motion.div
@@ -36,7 +35,7 @@ export default function ResultsPageWrapper() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <Header activePage={page} onNavigate={setPage} />
+      <Header activePage="results" />
 
       <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-6">
         {votingActive && !isEnded && !showTable ? (

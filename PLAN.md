@@ -1,42 +1,42 @@
 # Plan — Voting DApp Remaining Work
 
-## Phase 2: Admin Dashboard (`/admin`)
+## Phase 2D: Manual Sync — DONE
 
-### Part 2A: Admin Shell + Session Overview
-- Add `owner` read + `isOwner` check to `useVoting.ts`
-- Create `/admin` page — wallet-gated, then owner-gated (not owner → denied screen)
-- Session overview card: voting status, remaining time, isEnded flag, total votes from DB, last sync info
-- Add "Admin" tab to Header (only visible when connected address === owner)
-- [x] Done
+## Deploy: Vercel deployment — Not started
 
-### Part 2B: End Voting
-- Add `endVoting()` write call to `useVoting.ts`
-- "End Voting" button + confirmation in admin dashboard
-- Reuse TxStatusModal for tx flow
-- Status refresh after success
-- [x] Done
+## Phase 3: "Create New Voting" from Admin UI
 
-### Part 2C: Add Candidates
-- Form input for new candidate name
-- `addCandidate()` write call in `useVoting.ts`
-- Reuse TxStatusModal for tx flow
-- Success + error handling, candidates list refresh on success
-- [x] Done
+### Part 3A: DB schema — `active_contract` table
+- Add `active_contract` table to `src/lib/schema.sql` (single-row, stores current contract address, owner, candidates, duration)
+- Update `src/lib/init-db.ts` to include the migration
+- Insert initial row for currently deployed contract
 
-### Part 2D: Manual Sync
-- Add GET handler to `src/app/api/sync/route.ts`
-- "Sync Now" button in admin dashboard
-- Shows: last synced block, last sync time, votes synced in this run
-- Loading state + result feedback
-- [ ] Not started
+### Part 3B: `/api/config` GET endpoint
+- New route `src/app/api/config/route.ts`
+- Returns `{ contractAddress, owner }` from `active_contract` table
+- Falls back to `NEXT_PUBLIC_CONTRACT_ADDRESS` env var if empty DB
 
-## Deploy
-- Connect repo to Vercel, add env vars, deploy
-- Cron job (`vercel.json`) already in place
-- [ ] Not started
+### Part 3C: Dynamic contract address in useVoting.ts
+- Change `CONTRACT_ADDRESS` static import in `src/hooks/useVoting.ts` to use `/api/config` at runtime
+- All read/write contract calls reference the dynamic address
+- Add `useContractAddress()` helper hook
 
-## Key Details
-- Contract: `0x214AE6C5Cc1da15b76C9255f961c0817e778616C` on Sepolia
-- DB: Neon PostgreSQL, tables: vote_records, voting_sessions, candidates, sync_state
-- Branch: `main` (only branch)
-- Repo: github.com/rudrakumar2012/votingdapp
+### Part 3D: `/api/deploy` POST endpoint
+- New route `src/app/api/deploy/route.ts`
+- Uses viem with `PRIVATE_KEY` to deploy `Voting.sol` via compiled Hardhat artifact
+- Takes body: `{ candidates: string[], durationMinutes: number }`
+- Writes new contract to `active_contract` (replaces row), seeds candidates, resets sync_state
+- Returns `{ address, owner, candidates, durationMinutes }`
+
+### Part 3E: Admin UI — "Deploy New Voting" form
+- Add card to `src/components/admin/AdminDashboard.tsx`
+- Candidate name inputs (add/remove rows)
+- Duration input (minutes)
+- Deploy button → POST /api/deploy → loading → success with new address
+
+## Verification
+- `npm run build` passes
+- Visit `/admin` as owner → deploy form works
+- Deploy new contract with `["Alice", "Bob", "Charlie"]`, 5 min
+- `/voting` page shows new candidates, countdown starts
+- No .env changes needed between deploys

@@ -58,7 +58,7 @@ export default function HistoryPage() {
   if (!isConnected) {
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage="history" onNavigate={() => {}} />
+        <Header activePage="history"  />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -89,7 +89,7 @@ export default function HistoryPage() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <Header activePage="history" onNavigate={() => {}} />
+      <Header activePage="history"  />
       <div className="flex-1 max-w-xl mx-auto w-full px-6 py-6 space-y-6">
         <div className="flex items-center gap-3">
           <Link href="/voting">

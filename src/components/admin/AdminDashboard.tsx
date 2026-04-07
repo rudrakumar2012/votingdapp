@@ -38,6 +38,8 @@ export default function AdminDashboard() {
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [endVotingActive, setEndVotingActive] = useState(false);
   const [newCandidateName, setNewCandidateName] = useState("");
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<{ synced: number; newBlock: number } | null>(null);
   const firstLoad = useRef(true);
 
   // Fetch overview
@@ -113,6 +115,25 @@ export default function AdminDashboard() {
   function handleAddCandidate() {
     if (!newCandidateName.trim()) return;
     addCandidate(newCandidateName.trim());
+  }
+
+  async function syncNow() {
+    setSyncing(true);
+    setSyncResult(null);
+    try {
+      const res = await fetch("/api/sync", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || data.detail || "Failed to sync from chain");
+      setSyncResult({ synced: data.synced, newBlock: data.newBlock });
+      // Refresh overview after sync
+      setLoading(true);
+      fetchOverview();
+    } catch (e: any) {
+      console.error("Sync error:", e);
+      setSyncResult({ synced: -1, newBlock: 0 });
+    } finally {
+      setSyncing(false);
+    }
   }
 
   return (
@@ -247,6 +268,32 @@ export default function AdminDashboard() {
             {!votingActive && (
               <span className="text-xs text-muted-blue italic">Voting inactive</span>
             )}
+          </div>
+
+          {/* Sync Now */}
+          <div className="flex items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20">
+            <div className="space-y-1 flex-1 mr-4">
+              <p className="text-white font-medium">Sync from Chain</p>
+              <p className="text-xs text-muted-blue">
+                Manually fetch VoteCast events from Sepolia and update the DB.
+              </p>
+              {syncResult && (
+                <p className={`text-xs font-medium mt-2 ${syncResult.synced < 0 ? "text-red-400" : "text-green-400"}`}>
+                  {syncResult.synced < 0
+                    ? "Sync failed. Check server logs."
+                    : `Synced ${syncResult.synced} records (block ${syncResult.newBlock.toLocaleString()})`}
+                </p>
+              )}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={syncNow}
+              disabled={syncing}
+            >
+              <Database className="w-4 h-4 mr-1" />
+              {syncing ? "Syncing..." : "Sync Now"}
+            </Button>
           </div>
         </CardContent>
       </Card>

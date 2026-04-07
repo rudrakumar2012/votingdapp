@@ -13,7 +13,27 @@ const publicClient = createPublicClient({
   transport: http(process.env.SEPOLIA_RPC_URL),
 });
 
-export async function POST() {
+export async function GET() {
+  try {
+    const syncRows = await sql`SELECT last_synced_block, last_sync_at FROM sync_state LIMIT 1`;
+    if (syncRows.length === 0) {
+      return NextResponse.json({ lastSyncedBlock: 0, lastSyncAt: null, syncedInLastRun: 0 });
+    }
+    return NextResponse.json({
+      lastSyncedBlock: Number(syncRows[0].last_synced_block),
+      lastSyncAt: syncRows[0].last_sync_at,
+    });
+  } catch (error) {
+    console.error("GET /api/sync error:", error);
+    return NextResponse.json({ error: "Failed to fetch sync state" }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = request ? null : null; // consume
+  } catch {}
+
   try {
     const syncRows = await sql`SELECT last_synced_block FROM sync_state LIMIT 1`;
     const lastSyncedBlock = syncRows.length > 0 ? Number(syncRows[0].last_synced_block) : 0;
@@ -24,7 +44,10 @@ export async function POST() {
       return NextResponse.json({ synced: 0, newBlock: currentBlock });
     }
 
-    const fromBlock = lastSyncedBlock === 0 ? BigInt(1) : BigInt(lastSyncedBlock);
+    // For first sync, start from 3000 blocks before current block (fresh contract).
+    // This avoids scanning millions of blocks from block 1.
+    const from = lastSyncedBlock === 0 ? currentBlock - 3000 : lastSyncedBlock;
+    const fromBlock = BigInt(Math.max(0, from));
     const toBlock = BigInt(currentBlock);
 
     const logs = await publicClient.getLogs({
@@ -69,6 +92,7 @@ export async function POST() {
     return NextResponse.json({ synced, newBlock: currentBlock });
   } catch (error) {
     console.error("POST /api/sync error:", error);
-    return NextResponse.json({ error: "Failed to sync from chain" }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: `Sync failed: ${message}`, detail: message }, { status: 500 });
   }
 }

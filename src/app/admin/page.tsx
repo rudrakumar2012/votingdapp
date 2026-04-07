@@ -20,7 +20,7 @@ export default function AdminPage() {
   if (!isConnected) {
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage={page} onNavigate={() => {}} />
+        <Header activePage="admin" />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -53,7 +53,7 @@ export default function AdminPage() {
   if (!isOwner) {
     return (
       <div className="flex-1 flex flex-col">
-        <Header activePage={page} onNavigate={() => {}} />
+        <Header activePage="admin" />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -85,7 +85,7 @@ export default function AdminPage() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <Header activePage="admin" onNavigate={() => {}} />
+      <Header activePage="admin" />
       <div className="flex-1 max-w-xl mx-auto w-full px-6 py-6">
         <AdminDashboard />
       </div>
