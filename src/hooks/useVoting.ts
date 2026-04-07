@@ -65,6 +65,15 @@ export function useVoting() {
     error: endVotingError,
   } = useWriteContract();
 
+  // Add candidate write
+  const {
+    writeContract: addCandidateWrite,
+    data: addCandidateTxHash,
+    isPending: addCandidatePending,
+    error: addCandidateError,
+  } = useWriteContract();
+
+
   function endVoting() {
     endVotingWrite({
       address: CONTRACT_ADDRESS as `0x${string}`,
@@ -75,10 +84,25 @@ export function useVoting() {
     });
   }
 
+  function addCandidate(name: string) {
+    addCandidateWrite({
+      address: CONTRACT_ADDRESS as `0x${string}`,
+      abi: VOTING_ABI,
+      functionName: "addCandidate",
+      args: [name],
+      gas: BigInt(2_000_000),
+    });
+  }
+
   const {
     isLoading: endVotingConfirming,
     isSuccess: endVotingConfirmed,
   } = useWaitForTransactionReceipt({ hash: endVotingTxHash });
+
+  const {
+    isLoading: addCandidateConfirming,
+    isSuccess: addCandidateConfirmed,
+  } = useWaitForTransactionReceipt({ hash: addCandidateTxHash });
 
   const { isLoading: confirming, isSuccess: confirmed, data: receipt } = useWaitForTransactionReceipt({
     hash: txHash,
@@ -118,6 +142,12 @@ export function useVoting() {
     endVotingConfirming,
     endVotingConfirmed,
     endVotingError,
+    addCandidate,
+    addCandidateTxHash,
+    addCandidatePending,
+    addCandidateConfirming,
+    addCandidateConfirmed,
+    addCandidateError,
     receiptBlockNumber: receipt ? Number(receipt.blockNumber) : null,
     txError,
     refetch,

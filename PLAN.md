@@ -14,14 +14,14 @@
 - "End Voting" button + confirmation in admin dashboard
 - Reuse TxStatusModal for tx flow
 - Status refresh after success
-- [ ] Not started
+- [x] Done
 
 ### Part 2C: Add Candidates
 - Form input for new candidate name
 - `addCandidate()` write call in `useVoting.ts`
 - Reuse TxStatusModal for tx flow
-- Success + error handling
-- [ ] Not started
+- Success + error handling, candidates list refresh on success
+- [x] Done
 
 ### Part 2D: Manual Sync
 - Add GET handler to `src/app/api/sync/route.ts`

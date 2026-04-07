@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TxStatusModal from "@/components/voting/TxStatusModal";
 import { useVoting } from "@/hooks/useVoting";
-import { AlertCircle, Clock, Database, Users, FileText, Flag, CheckCircle, RefreshCw } from "lucide-react";
+import { AlertCircle, Clock, Database, Users, FileText, Flag, RefreshCw, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Overview {
@@ -25,12 +25,19 @@ export default function AdminDashboard() {
     endVotingConfirming,
     endVotingConfirmed,
     endVotingError,
+    addCandidate,
+    addCandidateTxHash,
+    addCandidatePending,
+    addCandidateConfirming,
+    addCandidateConfirmed,
+    addCandidateError,
     refetch,
   } = useVoting();
   const [overview, setOverview] = useState<Overview | null>(null);
   const [loading, setLoading] = useState(true);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [endVotingActive, setEndVotingActive] = useState(false);
+  const [newCandidateName, setNewCandidateName] = useState("");
   const firstLoad = useRef(true);
 
   // Fetch overview
@@ -68,6 +75,22 @@ export default function AdminDashboard() {
     }
   }, [endVotingConfirmed]);
 
+  // Refetch after add candidate confirmed
+  useEffect(() => {
+    if (addCandidateConfirmed) {
+      setLoading(true);
+      fetchOverview();
+      refetch?.();
+      setNewCandidateName("");
+    }
+  }, [addCandidateConfirmed]);
+
+  let addTxState: "pending" | "confirming" | "confirmed" | "rejected" | null = null;
+  if (addCandidatePending) addTxState = "pending";
+  else if (addCandidateConfirming) addTxState = "confirming";
+  else if (addCandidateConfirmed) addTxState = "confirmed";
+  else if (addCandidateError) addTxState = "rejected";
+
   const formatRemaining = (secs: number) => {
     if (secs <= 0) return "Expired";
     const h = Math.floor(secs / 3600);
@@ -85,6 +108,11 @@ export default function AdminDashboard() {
   function handleEndVoting() {
     endVoting();
     setShowEndConfirm(false);
+  }
+
+  function handleAddCandidate() {
+    if (!newCandidateName.trim()) return;
+    addCandidate(newCandidateName.trim());
   }
 
   return (
@@ -163,7 +191,7 @@ export default function AdminDashboard() {
             <div className="space-y-1">
               <p className="text-white font-medium">End Voting</p>
               <p className="text-xs text-muted-blue">
-                Permanently close the current voting session. All votes remain valid.
+                Permanently close the current voting session.
               </p>
             </div>
             {votingActive && !isEnded ? (
@@ -182,8 +210,59 @@ export default function AdminDashboard() {
               </span>
             )}
           </div>
+
+          {/* Add Candidate */}
+          <div className="flex items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20">
+            <div className="space-y-1 flex-1 mr-4">
+              <p className="text-white font-medium">Add Candidate</p>
+              <p className="text-xs text-muted-blue">
+                Add a new candidate to the election.
+              </p>
+              {votingActive && (
+                <div className="flex gap-2 mt-2">
+                  <input
+                    type="text"
+                    value={newCandidateName}
+                    onChange={(e) => setNewCandidateName(e.target.value)}
+                    placeholder="Candidate name"
+                    className="flex-1 bg-deep-navy border border-muted-blue/30 rounded-lg px-3 py-1.5 text-sm text-white placeholder-muted-blue focus:outline-none focus:border-soft-purple"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && newCandidateName.trim()) {
+                        handleAddCandidate();
+                      }
+                    }}
+                    disabled={addCandidatePending || addCandidateConfirming}
+                  />
+                  <Button
+                    variant="brand"
+                    size="sm"
+                    onClick={handleAddCandidate}
+                    disabled={!newCandidateName.trim() || addCandidatePending || addCandidateConfirming}
+                  >
+                    <UserPlus className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+            {!votingActive && (
+              <span className="text-xs text-muted-blue italic">Voting inactive</span>
+            )}
+          </div>
         </CardContent>
       </Card>
+
+      {/* Add Candidate Tx Status */}
+      {addTxState && (
+        <TxStatusModal
+          status={addTxState}
+          txHash={addCandidateTxHash ?? null}
+          candidateName={newCandidateName || null}
+          onClose={() => {
+            if (addCandidateConfirmed) {}
+          }}
+          errorMsg={addCandidateError?.message ?? null}
+        />
+      )}
 
       {/* End Voting Confirmation */}
       {showEndConfirm && (
