@@ -6,13 +6,13 @@
 - Phase 1-7: Full app overhaul done (see original overhaul section below for details)
 - Phase 2A-2C: Admin shell, End Voting, Add Candidates — DONE
 - Phase 2D: Manual Sync from chain — DONE
+- Phase 3A-3E: Create New Voting — DONE (active_contract table, /api/config, /api/deploy, dynamic address, admin deploy form)
 - Nav links: All Header links now use `<Link>` elements directly (no broken onNavigate callbacks)
 - Sync POST: Fixed infinite block range scan (now scans last 3000 blocks on first run)
 - Contract: Deployed to Sepolia `0xb47156F7D72aa83bcC9db5CC44b3237C9B235d39` (updated .env)
 - Build: Passes cleanly
 
 ### Remaining
-- **Phase 3**: "Create New Voting" from admin UI (deploy new contract on demand, dynamic address) — see PLAN.md for subparts 3A-3E
 - **Deploy to Vercel**: Connect repo, set env vars, deploy (cron already in vercel.json)
 
 ## Overhaul Progress (Historical)

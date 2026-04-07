@@ -5,20 +5,22 @@ import { useState, useEffect } from "react";
 
 export function useContractAddress() {
   const [contractAddress, setContractAddress] = useState<string | null>(null);
+  const [key, setKey] = useState(0);
+  const refetch = () => setKey((k) => k + 1);
 
   useEffect(() => {
     fetch("/api/config")
       .then((res) => res.json())
       .then((data) => setContractAddress(data.contractAddress ?? null))
       .catch(() => setContractAddress(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? null));
-  }, []);
+  }, [key]);
 
-  return contractAddress;
+  return { contractAddress, refetch };
 }
 
 export function useVoting() {
   const { address } = useAccount();
-  const contractAddress = useContractAddress();
+  const { contractAddress, refetch: refetchAddress } = useContractAddress();
   const addr = (contractAddress ?? "") as `0x${string}`;
 
   // Read candidate list
@@ -168,5 +170,6 @@ export function useVoting() {
     receiptBlockNumber: receipt ? Number(receipt.blockNumber) : null,
     txError,
     refetch,
+    refetchContract: refetchAddress,
   };
 }

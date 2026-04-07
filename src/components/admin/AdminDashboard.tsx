@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TxStatusModal from "@/components/voting/TxStatusModal";
 import { useVoting } from "@/hooks/useVoting";
-import { AlertCircle, Clock, Database, Users, FileText, Flag, RefreshCw, UserPlus } from "lucide-react";
+import { AlertCircle, Clock, Database, Users, FileText, Flag, RefreshCw, UserPlus, Rocket, Plus, X, Copy, Check } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Overview {
@@ -32,6 +32,7 @@ export default function AdminDashboard() {
     addCandidateConfirmed,
     addCandidateError,
     refetch,
+    refetchContract,
   } = useVoting();
   const [overview, setOverview] = useState<Overview | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,6 +42,14 @@ export default function AdminDashboard() {
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<{ synced: number; newBlock: number } | null>(null);
   const firstLoad = useRef(true);
+
+  // Deploy new voting state
+  const [deployCandidates, setDeployCandidates] = useState<string[]>(["", "", ""]);
+  const [deployDuration, setDeployDuration] = useState(5);
+  const [deploying, setDeploying] = useState(false);
+  const [deployResult, setDeployResult] = useState<{ address: string; txHash: string } | null>(null);
+  const [deployError, setDeployError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   // Fetch overview
   const fetchOverview = () => {
@@ -134,6 +143,60 @@ export default function AdminDashboard() {
     } finally {
       setSyncing(false);
     }
+  }
+
+  // Deploy new voting
+  function updateDeployCandidate(index: number, value: string) {
+    setDeployCandidates((prev) => {
+      const next = [...prev];
+      next[index] = value;
+      return next;
+    });
+  }
+
+  function addCandidateRow() {
+    setDeployCandidates((prev) => [...prev, ""]);
+  }
+
+  function removeCandidateRow(index: number) {
+    setDeployCandidates((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  async function deployNewVoting() {
+    const candidates = deployCandidates.map((c) => c.trim()).filter(Boolean);
+    if (candidates.length === 0) return;
+    if (deployDuration <= 0) return;
+
+    setDeploying(true);
+    setDeployResult(null);
+    setDeployError(null);
+
+    try {
+      const res = await fetch("/api/deploy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ candidates, durationMinutes: deployDuration }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Deploy failed");
+      setDeployResult({ address: data.address, txHash: data.txHash });
+      // Refresh contract address and client data
+      refetchContract?.();
+      refetch?.();
+      // Full reload to pick up new contract address on all pages
+      setTimeout(() => window.location.reload(), 2000);
+    } catch (e: any) {
+      console.error("Deploy error:", e);
+      setDeployError(e.message);
+    } finally {
+      setDeploying(false);
+    }
+  }
+
+  function copyAddress(address: string) {
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -293,6 +356,99 @@ export default function AdminDashboard() {
             >
               <Database className="w-4 h-4 mr-1" />
               {syncing ? "Syncing..." : "Sync Now"}
+            </Button>
+          </div>
+
+          {/* Deploy New Voting */}
+          <div className="p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20 space-y-4">
+            <div>
+              <p className="text-white font-medium flex items-center gap-2">
+                <Rocket className="w-4 h-4 text-soft-purple" />
+                Deploy New Voting
+              </p>
+              <p className="text-xs text-muted-blue mt-1">
+                Deploy a fresh contract on-chain with new candidates and duration.
+              </p>
+            </div>
+
+            {/* Candidate inputs */}
+            <div className="space-y-2">
+              <p className="text-xs text-white font-medium">Candidates</p>
+              {deployCandidates.map((name, i) => (
+                <div key={i} className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => updateDeployCandidate(i, e.target.value)}
+                    placeholder={`Candidate ${i + 1}`}
+                    className="flex-1 bg-deep-navy border border-muted-blue/30 rounded-lg px-3 py-1.5 text-sm text-white placeholder-muted-blue focus:outline-none focus:border-soft-purple"
+                    disabled={deploying}
+                  />
+                  {deployCandidates.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeCandidateRow(i)}
+                      disabled={deploying}
+                      className="text-muted-blue hover:text-red-400 p-1 h-auto"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={addCandidateRow}
+                disabled={deploying}
+                className="text-muted-blue hover:text-soft-purple p-1 h-auto"
+              >
+                <Plus className="w-3.5 h-3.5 mr-1" />
+                <span className="text-xs">Add Candidate</span>
+              </Button>
+            </div>
+
+            {/* Duration */}
+            <div className="flex gap-2 items-center">
+              <label className="text-xs text-white font-medium min-w-[6rem]">Duration (min)</label>
+              <input
+                type="number"
+                min={1}
+                value={deployDuration}
+                onChange={(e) => setDeployDuration(parseInt(e.target.value, 10) || 1)}
+                className="w-24 bg-deep-navy border border-muted-blue/30 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-soft-purple"
+                disabled={deploying}
+              />
+            </div>
+
+            {/* Deploy button + status */}
+            {deployError && (
+              <p className="text-xs text-red-400">{deployError}</p>
+            )}
+            {deployResult && (
+              <div className="space-y-1">
+                <p className="text-xs text-green-400 font-medium">Deployed successfully!</p>
+                <div className="flex items-center gap-1">
+                  <p className="text-xs text-muted-blue break-all font-mono">{deployResult.address}</p>
+                  <button
+                    onClick={() => copyAddress(deployResult.address)}
+                    className="text-muted-blue hover:text-soft-purple flex-shrink-0"
+                    title="Copy address"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+            )}
+            <Button
+              variant="brand"
+              size="sm"
+              onClick={deployNewVoting}
+              disabled={deploying || deployCandidates.filter((c) => c.trim()).length === 0}
+              className="w-full"
+            >
+              {deploying ? "Deploying..." : "Deploy New Voting"}
             </Button>
           </div>
         </CardContent>

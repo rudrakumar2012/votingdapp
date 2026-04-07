@@ -28,11 +28,14 @@
 - Writes new contract to `active_contract` (replaces row), seeds candidates, resets sync_state
 - Returns `{ address, owner, candidates, durationMinutes }`
 
-### Part 3E: Admin UI — "Deploy New Voting" form
-- Add card to `src/components/admin/AdminDashboard.tsx`
-- Candidate name inputs (add/remove rows)
-- Duration input (minutes)
-- Deploy button → POST /api/deploy → loading → success with new address
+### Part 3E: Admin UI — "Deploy New Voting" form - DONE
+- Added deploy card to `src/components/admin/AdminDashboard.tsx`
+- Candidate name inputs (add/remove rows), duration input, deploy button
+- POST /api/deploy → loading → success with new address + copy-to-clipboard
+- Auto-reloads page to propagate new contract address to all pages
+
+### 3C fix: Rules of Hooks
+- Fixed `src/app/voting/page.tsx` — moved `endedResults` useState/useEffect above early returns
 
 ## Verification
 - `npm run build` passes

@@ -48,6 +48,23 @@ export default function VotingPage() {
   else if (confirmed) txStatus = "confirmed";
   else if (txError) txStatus = "rejected";
 
+  // Voting ended results
+  const [endedResults, setEndedResults] = useState<{ winner: string; votes: number; total: number } | null>(null);
+  useEffect(() => {
+    if (!votingActive) {
+      fetch("/api/results")
+        .then((r) => r.json())
+        .then((data) =>
+          setEndedResults({
+            winner: data.winner?.name ?? "No votes cast",
+            votes: data.winner?.votes ?? 0,
+            total: data.totalVotes ?? 0,
+          })
+        )
+        .catch(() => setEndedResults({ winner: "Unable to load", votes: 0, total: 0 }));
+    }
+  }, [votingActive]);
+
   function handleNext() {
     if (step === 1 && selectedCandidate) setStep(2);
   }
@@ -64,57 +81,6 @@ export default function VotingPage() {
       setReceiptTs(new Date());
     }
   }, [confirmed, receiptTs]);
-
-  // Wallet not connected
-  if (!isConnected) {
-    return (
-      <div className="flex-1 flex flex-col">
-        <Header activePage="voting" />
-        <div className="flex-1 flex items-center justify-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center max-w-md mx-auto px-6"
-          >
-            <Card className="border-muted-blue/30">
-              <CardHeader className="space-y-4">
-                <div className="w-16 h-16 mx-auto rounded-full bg-muted-blue/10 border-2 border-muted-blue/30 flex items-center justify-center">
-                  <Wallet className="w-8 h-8 text-soft-purple" />
-                </div>
-                <div className="space-y-2">
-                  <CardTitle className="text-xl">Connect Your Wallet</CardTitle>
-                  <p className="text-sm text-muted-blue mt-2">
-                    You need an Ethereum wallet on the <strong className="text-light-pink">Sepolia testnet</strong> to vote.
-                  </p>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <WalletConnectButton />
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
-  // Voting ended — show summary with winner info
-  const [endedResults, setEndedResults] = useState<{ winner: string; votes: number; total: number } | null>(null);
-
-  useEffect(() => {
-    if (!votingActive) {
-      fetch("/api/results")
-        .then((r) => r.json())
-        .then((data) =>
-          setEndedResults({
-            winner: data.winner?.name ?? "No votes cast",
-            votes: data.winner?.votes ?? 0,
-            total: data.totalVotes ?? 0,
-          })
-        )
-        .catch(() => setEndedResults({ winner: "Unable to load", votes: 0, total: 0 }));
-    }
-  }, [votingActive]);
 
   if (!votingActive && !isEnded) {
     // Time expired but owner hasn't called endVoting() yet
