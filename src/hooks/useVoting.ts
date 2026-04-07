@@ -57,6 +57,29 @@ export function useVoting() {
   // Vote write
   const { writeContract, data: txHash, isPending: txPending, error: txError } = useWriteContract();
 
+  // End voting write
+  const {
+    writeContract: endVotingWrite,
+    data: endVotingTxHash,
+    isPending: endVotingPending,
+    error: endVotingError,
+  } = useWriteContract();
+
+  function endVoting() {
+    endVotingWrite({
+      address: CONTRACT_ADDRESS as `0x${string}`,
+      abi: VOTING_ABI,
+      functionName: "endVoting",
+      args: [],
+      gas: BigInt(2_000_000),
+    });
+  }
+
+  const {
+    isLoading: endVotingConfirming,
+    isSuccess: endVotingConfirmed,
+  } = useWaitForTransactionReceipt({ hash: endVotingTxHash });
+
   const { isLoading: confirming, isSuccess: confirmed, data: receipt } = useWaitForTransactionReceipt({
     hash: txHash,
   });
@@ -89,6 +112,12 @@ export function useVoting() {
     confirmed,
     txHash,
     owner,
+    endVoting,
+    endVotingTxHash,
+    endVotingPending,
+    endVotingConfirming,
+    endVotingConfirmed,
+    endVotingError,
     receiptBlockNumber: receipt ? Number(receipt.blockNumber) : null,
     txError,
     refetch,
