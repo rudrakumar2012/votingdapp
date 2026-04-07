@@ -46,6 +46,14 @@ export function useVoting() {
     query: { refetchInterval: 10000 },
   });
 
+  // Owner address
+  const { data: owner } = useReadContract({
+    address: CONTRACT_ADDRESS as `0x${string}`,
+    abi: VOTING_ABI,
+    functionName: "owner",
+  });
+
+
   // Vote write
   const { writeContract, data: txHash, isPending: txPending, error: txError } = useWriteContract();
 
@@ -80,6 +88,7 @@ export function useVoting() {
     confirming,
     confirmed,
     txHash,
+    owner,
     receiptBlockNumber: receipt ? Number(receipt.blockNumber) : null,
     txError,
     refetch,

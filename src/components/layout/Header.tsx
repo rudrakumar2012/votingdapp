@@ -4,12 +4,14 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import WalletConnectButton from "@/components/wallet/WalletConnectButton";
+import { useVoting } from "@/hooks/useVoting";
+import { useAccount } from "wagmi";
 
 export default function Header({
   activePage,
   onNavigate,
 }: {
-  activePage: "voting" | "results" | "history";
+  activePage: "voting" | "results" | "history" | "admin";
   onNavigate: (page: "voting" | "results") => void;
 }) {
   return (
@@ -57,6 +59,32 @@ export default function Header({
           )}
           History
         </Link>
+        {(() => {
+          const { address } = useAccount();
+          const { owner } = useVoting();
+          const isOwner = address?.toLowerCase() === owner?.toLowerCase();
+          if (!isOwner) return null;
+          return (
+            <Link
+              href="/admin"
+              className={cn(
+                "px-4 py-2 rounded-lg text-sm font-medium relative transition-colors",
+                activePage === "admin"
+                  ? "text-white"
+                  : "text-muted-blue hover:text-light-pink",
+              )}
+            >
+              {activePage === "admin" && (
+                <motion.div
+                  layoutId="active-nav"
+                  className="absolute inset-0 bg-soft-purple rounded-lg -z-10"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
+              Admin
+            </Link>
+          );
+        })()}
         <WalletConnectButton />
       </nav>
     </header>
