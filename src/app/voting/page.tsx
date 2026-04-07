@@ -7,15 +7,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import CountdownTimer from "@/components/voting/CountdownTimer";
 import CandidateSelector from "@/components/voting/CandidateSelector";
-import VotingTable from "@/components/voting/VotingTable";
 import TxStatusModal from "@/components/voting/TxStatusModal";
+import VoteReceipt from "@/components/voting/VoteReceipt";
 import StepWizard from "@/components/voting/StepWizard";
 import WalletConnectButton from "@/components/wallet/WalletConnectButton";
 import { useVoting } from "@/hooks/useVoting";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Wallet, AlertCircle, CheckCircle, FileText } from "lucide-react";
+import { Wallet, AlertCircle, CheckCircle, FileText } from "lucide-react";
 import { motion } from "framer-motion";
 
 const STEP_LABELS = ["Select Candidate", "Confirm Vote", "Done"];
@@ -35,10 +34,13 @@ export default function VotingPage() {
     txPending,
     confirming,
     confirmed,
+    txHash,
     txError,
+    receiptBlockNumber,
   } = useVoting();
-
+  const { address } = useAccount();
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null);
+  const [receiptTs, setReceiptTs] = useState<Date | null>(null);
 
   const txActive = txPending || confirming || confirmed || !!txError;
   let txStatus: "pending" | "confirming" | "confirmed" | "rejected" | null = null;
@@ -56,6 +58,13 @@ export default function VotingPage() {
     const index = candidates.findIndex((c) => c.name === selectedCandidate);
     if (index >= 0) voteForCandidate(index);
   }
+
+  // Track when confirmation happens so we can capture the timestamp
+  useEffect(() => {
+    if (confirmed && !receiptTs) {
+      setReceiptTs(new Date());
+    }
+  }, [confirmed, receiptTs]);
 
   // Wallet not connected
   if (!isConnected) {
@@ -305,6 +314,37 @@ export default function VotingPage() {
                     Submit Vote
                   </Button>
                 </div>
+              </motion.div>
+            )}
+
+            {/* Step 3 — Vote Receipt */}
+            {step === 3 && confirmed && receiptTs && receiptBlockNumber != null && selectedCandidate && (
+              <VoteReceipt
+                txHash={txHash!}
+                candidateName={selectedCandidate}
+                voterAddress={address!}
+                blockNumber={receiptBlockNumber}
+                confirmedAt={receiptTs}
+              />
+            )}
+            {step === 3 && (!confirmed || !receiptTs) && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center max-w-md mx-auto"
+              >
+                <Card className="border-soft-purple/30 bg-soft-purple/5">
+                  <CardContent className="text-center py-10">
+                    <CheckCircle className="w-12 h-12 text-soft-purple mx-auto mb-4" />
+                    <h2 className="text-xl font-bold text-white mb-2">Vote Recorded!</h2>
+                    <p className="text-muted-blue text-sm mb-6">
+                      Your vote has been permanently stored on the Sepolia blockchain.
+                    </p>
+                    <Link href="/results">
+                      <Button variant="brand">View Results</Button>
+                    </Link>
+                  </CardContent>
+                </Card>
               </motion.div>
             )}
           </div>

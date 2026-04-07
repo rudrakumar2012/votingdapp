@@ -9,7 +9,7 @@ export default function Header({
   activePage,
   onNavigate,
 }: {
-  activePage: "voting" | "results";
+  activePage: "voting" | "results" | "history";
   onNavigate: (page: "voting" | "results") => void;
 }) {
   return (
@@ -39,6 +39,24 @@ export default function Header({
             {page === "voting" ? "Vote" : "Results"}
           </button>
         ))}
+        <Link
+          href="/history"
+          className={cn(
+            "px-4 py-2 rounded-lg text-sm font-medium relative transition-colors",
+            activePage === "history"
+              ? "text-white"
+              : "text-muted-blue hover:text-light-pink",
+          )}
+        >
+          {activePage === "history" && (
+            <motion.div
+              layoutId="active-nav"
+              className="absolute inset-0 bg-soft-purple rounded-lg -z-10"
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          )}
+          History
+        </Link>
         <WalletConnectButton />
       </nav>
     </header>

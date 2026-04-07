@@ -49,7 +49,7 @@ export function useVoting() {
   // Vote write
   const { writeContract, data: txHash, isPending: txPending, error: txError } = useWriteContract();
 
-  const { isLoading: confirming, isSuccess: confirmed } = useWaitForTransactionReceipt({
+  const { isLoading: confirming, isSuccess: confirmed, data: receipt } = useWaitForTransactionReceipt({
     hash: txHash,
   });
 
@@ -80,6 +80,7 @@ export function useVoting() {
     confirming,
     confirmed,
     txHash,
+    receiptBlockNumber: receipt ? Number(receipt.blockNumber) : null,
     txError,
     refetch,
   };

@@ -64,4 +64,5 @@
 - Build passes cleanly
 
 ### Steps remaining
-1. Vercel deployment config
+1. Phase 1.3 + 1.4: Vote receipt + voter history page
+2. Vercel deployment config
