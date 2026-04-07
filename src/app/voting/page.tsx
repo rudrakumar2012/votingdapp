@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import { useState } from "react";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
+import { Loader2 } from "lucide-react";
 import CountdownTimer from "@/components/voting/CountdownTimer";
 import CandidateSelector from "@/components/voting/CandidateSelector";
 import TxStatusModal from "@/components/voting/TxStatusModal";
@@ -16,11 +17,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Wallet, AlertCircle, CheckCircle, FileText } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const STEP_LABELS = ["Select Candidate", "Confirm Vote", "Done"];
 
 export default function VotingPage() {
   const { isConnected } = useAccount();
+  const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const {
     candidates,
@@ -40,6 +43,7 @@ export default function VotingPage() {
   const { address } = useAccount();
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null);
   const [receiptTs, setReceiptTs] = useState<Date | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
 
   const txActive = txPending || confirming || confirmed || !!txError;
   let txStatus: "pending" | "confirming" | "confirmed" | "rejected" | null = null;
@@ -64,6 +68,15 @@ export default function VotingPage() {
         .catch(() => setEndedResults({ winner: "Unable to load", votes: 0, total: 0 }));
     }
   }, [votingActive]);
+
+  // Auto-redirect to results after voting confirmed
+  useEffect(() => {
+    if (hasVoted && !txActive && !redirecting) {
+      setRedirecting(true);
+      const timer = setTimeout(() => router.push("/results"), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [hasVoted, txActive, redirecting, router]);
 
   function handleNext() {
     if (step === 1 && selectedCandidate) setStep(2);
@@ -206,7 +219,20 @@ export default function VotingPage() {
 
         {/* Loading */}
         {loadingCandidates ? (
-          <div className="text-center text-muted-blue py-8">Loading candidates...</div>
+          <div className="text-center py-16 space-y-4">
+            <Loader2 className="w-10 h-10 text-soft-purple animate-spin mx-auto" />
+            <p className="text-muted-blue">Loading voting session...</p>
+          </div>
+        ) : candidates.length === 0 ? (
+          <div className="text-center py-16 space-y-4">
+            <AlertCircle className="w-10 h-10 text-muted-blue/50 mx-auto" />
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold text-white">No Active Election</h3>
+              <p className="text-sm text-muted-blue max-w-md mx-auto">
+                No voting session is currently available. Contact your admin to deploy a new election.
+              </p>
+            </div>
+          </div>
         ) : (
           <div className="space-y-6">
             {/* Step 1 — Select Candidate */}

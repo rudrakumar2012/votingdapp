@@ -46,18 +46,10 @@ function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-soft-purple/15 via-deep-navy to-deep-navy" />
       <FloatingOrbs />
 
-      {/* Nav */}
-      <nav className="relative z-10 flex items-center justify-between px-6 sm:px-12 py-6">
+      {/* Logo */}
+      <div className="relative z-10 flex items-center px-6 sm:px-12 py-6">
         <h1 className="text-2xl font-bold text-soft-purple">VoteChain</h1>
-        <Link
-          href="/voting"
-          className={cn(
-            buttonVariants({ variant: "brand", size: "sm" }),
-          )}
-        >
-          Launch App
-        </Link>
-      </nav>
+      </div>
 
       {/* Main Content */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 -mt-16">

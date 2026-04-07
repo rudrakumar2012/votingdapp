@@ -9,8 +9,17 @@
 - Phase 3A-3E: Create New Voting — DONE (active_contract table, /api/config, /api/deploy, dynamic address, admin deploy form)
 - Nav links: All Header links now use `<Link>` elements directly (no broken onNavigate callbacks)
 - Sync POST: Fixed infinite block range scan (now scans last 3000 blocks on first run)
-- Contract: Deployed to Sepolia `0xb47156F7D72aa83bcC9db5CC44b3237C9B235d39` (updated .env)
+- Contract: Deployed to Sepolia `0xb47156F7D72aa83bcC9db5CC44b3237C9B235d39` (updated .env.local)
 - Build: Passes cleanly
+- Bug fixes (2026-04-07):
+  - `/api/config` 500 — `active_contract` table created & seeded in Neon DB
+  - `.env.local` contract address corrected
+  - `/api/deploy` private key 0x prefix fix
+  - `fetchConnectionCache` deprecation removed from db.ts
+  - `/voting` page loading + empty state
+  - Hydration error on `<w3m-button>` — client-side only render
+  - "Launch App" button removed from landing page
+  - Vote auto-redirect to `/results` after 2s
 
 ### Remaining
 - **Deploy to Vercel**: Connect repo, set env vars, deploy (cron already in vercel.json)
@@ -43,6 +52,6 @@
 
 ### Key Details
 - Contract: `0xb47156F7D72aa83bcC9db5CC44b3237C9B235d39` on Sepolia
-- DB: Neon PostgreSQL, tables: vote_records, voting_sessions, candidates, sync_state
+- DB: Neon PostgreSQL, tables: vote_records, voting_sessions, candidates, sync_state, active_contract
 - Branch: `main` (only branch)
 - Repo: github.com/rudrakumar2012/votingdapp

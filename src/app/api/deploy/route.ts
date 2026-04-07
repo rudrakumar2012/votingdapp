@@ -41,7 +41,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const account = privateKeyToAccount(privateKey as `0x${string}`);
+    const rawKey = privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`;
+    const account = privateKeyToAccount(rawKey as `0x${string}`);
 
     const walletClient = createWalletClient({
       account,
