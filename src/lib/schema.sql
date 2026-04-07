@@ -34,3 +34,13 @@ CREATE TABLE IF NOT EXISTS sync_state (
   last_synced_block BIGINT DEFAULT 0,
   last_sync_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- active_contract: single-row config storing the current deployed contract
+CREATE TABLE IF NOT EXISTS active_contract (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  contract_address VARCHAR(42) NOT NULL,
+  owner_address VARCHAR(42),
+  candidate_names TEXT[] NOT NULL DEFAULT '{}',
+  duration_minutes INTEGER NOT NULL DEFAULT 60,
+  deployed_at TIMESTAMPTZ DEFAULT NOW()
+);

@@ -59,6 +59,20 @@ async function initDb() {
   const candidateNames = ["Alice", "Bob", "Charlie"];
   const durationMinutes = 60;
 
+  // Seed active_contract with current env contract address
+  const ownerAddress = process.env.OWNER_ADDRESS ?? "";
+  await sql`
+    INSERT INTO active_contract (contract_address, owner_address, candidate_names, duration_minutes)
+    VALUES (
+      ${contractAddress || "0x0000000000000000000000000000000000000000"},
+      ${ownerAddress || "0x0000000000000000000000000000000000000000"},
+      ${candidateNames},
+      ${durationMinutes}
+    )
+    ON CONFLICT (id) DO NOTHING
+  `;
+  console.log("Active contract row seeded (skipped if exists)");
+
   await sql`
     INSERT INTO voting_sessions (contract_address, chain_id, candidate_names, duration_minutes, started_at)
     VALUES (
