@@ -33,20 +33,22 @@ git push origin main
 
 Already configured: `.github/workflows/sync.yml` will call `/api/sync` every 5 minutes.
 
-After deployment, your Vercel app URL will be: `https://votingdapp.vercel.app` (or your custom domain).
+After deployment, your Vercel app URL will be something like:
+- `https://votingdapp.vercel.app` (default)
+- Or your custom domain
 
-The workflow will automatically start running. You can also manually trigger it from GitHub → **Actions** → **Sync Votes from Blockchain** → **Run workflow**.
+**Important**: You must add this URL as a GitHub secret:
 
-If your `/api/sync` endpoint requires authentication (you added auth middleware), add a `VERCEL_TOKEN` secret:
-1. Go to [Vercel API Tokens](https://vercel.com/account/tokens)
-2. Create a token with "Full Access" or "Read & Execute"
-3. In GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
-4. Name: `VERCEL_TOKEN`, Value: your token
-5. Update `.github/workflows/sync.yml` to use it:
-   ```yaml
-   curl -X POST https://your-app.vercel.app/api/sync \
-     -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
-   ```
+1. In GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+2. Name: `APP_URL`
+3. Value: `https://your-app.vercel.app` (use your actual production URL)
+4. Click **Add secret**
+
+The workflow will automatically start running after you add the secret. You can also manually trigger it from GitHub → **Actions** → **Sync Votes from Blockchain** → **Run workflow**.
+
+**Optional**: If your `/api/sync` endpoint requires authentication, also add:
+- `VERCEL_TOKEN`: Create at [Vercel API Tokens](https://vercel.com/account/tokens) (Full Access)
+- Then modify workflow to include `-H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"`
 
 ---
 

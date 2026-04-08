@@ -11,10 +11,10 @@ jobs:
     steps:
       - name: Trigger Vercel Sync Endpoint
         run: |
-          curl -X POST https://votingdapp.vercel.app/api/sync \
+          curl -X POST ${{ secrets.APP_URL }}/api/sync \
             -H "Content-Type: application/json" \
             -w "\nStatus: %{http_code}\n"
         env:
-          VERCEL_URL: ${{ secrets.VERCEL_URL }}
-        # Note: If your endpoint requires auth, add:
+          APP_URL: ${{ secrets.APP_URL }}
+        # If your endpoint requires auth, add:
         # -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
