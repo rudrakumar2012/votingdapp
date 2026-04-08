@@ -1,0 +1,20 @@
+name: Sync Votes from Blockchain
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 minutes
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Sync Endpoint
+        run: |
+          curl -X POST https://votingdapp.vercel.app/api/sync \
+            -H "Content-Type: application/json" \
+            -w "\nStatus: %{http_code}\n"
+        env:
+          VERCEL_URL: ${{ secrets.VERCEL_URL }}
+        # Note: If your endpoint requires auth, add:
+        # -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"

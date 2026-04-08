@@ -27,6 +27,27 @@ git push origin main
 3. **Import** from GitHub → select `rudrakumar2012/votingdapp`
 4. Click **Create Project**
 
+> **Note for Free Plan Users**: Vercel cron jobs require Pro plan or higher. If you're on the free plan, skip the cron in `vercel.json` and use **GitHub Actions** (see step 2b below).
+
+### 2b. Set Up GitHub Actions (Free Cron Alternative)
+
+Already configured: `.github/workflows/sync.yml` will call `/api/sync` every 5 minutes.
+
+After deployment, your Vercel app URL will be: `https://votingdapp.vercel.app` (or your custom domain).
+
+The workflow will automatically start running. You can also manually trigger it from GitHub → **Actions** → **Sync Votes from Blockchain** → **Run workflow**.
+
+If your `/api/sync` endpoint requires authentication (you added auth middleware), add a `VERCEL_TOKEN` secret:
+1. Go to [Vercel API Tokens](https://vercel.com/account/tokens)
+2. Create a token with "Full Access" or "Read & Execute"
+3. In GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+4. Name: `VERCEL_TOKEN`, Value: your token
+5. Update `.github/workflows/sync.yml` to use it:
+   ```yaml
+   curl -X POST https://your-app.vercel.app/api/sync \
+     -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
+   ```
+
 ---
 
 ## 3. Configure Environment Variables
@@ -82,9 +103,17 @@ In Vercel Dashboard → Your Project → **Settings** → **Environment Variable
 - [ ] After deployment, voting page reflects new contract automatically
 
 ### ✅ Cron Job
+#### If on Vercel Pro plan (or higher):
 - [ ] Wait 5 minutes, check Vercel logs for `/api/sync` execution
 - [ ] Or manually trigger: `curl -X POST https://your-app.vercel.app/api/sync`
 - [ ] Verify `vote_records` table syncs from chain
+
+#### If on Vercel Free plan (using GitHub Actions):
+- [ ] After deploy, go to GitHub repo → **Actions** tab
+- [ ] You should see "Sync Votes from Blockchain" workflow active
+- [ ] Wait for scheduled run (every 5 min) or manually trigger
+- [ ] Check workflow logs for successful `curl` call (HTTP 200/201)
+- [ ] Verify `vote_records` table syncs from chain by checking Neon DB or `/api/sync` GET response
 
 ### ✅ Database
 - [ ] Neon DB `active_contract` table has initial row
