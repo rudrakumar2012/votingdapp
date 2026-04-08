@@ -69,14 +69,14 @@ export default function VotingPage() {
     }
   }, [votingActive]);
 
-  // Auto-redirect to results after voting confirmed
+  // Auto-redirect to results after voting confirmed (receipt shown)
   useEffect(() => {
-    if (hasVoted && !txActive && !redirecting) {
+    if (receiptTs && !redirecting) {
       setRedirecting(true);
       const timer = setTimeout(() => router.push("/results"), 2000);
       return () => clearTimeout(timer);
     }
-  }, [hasVoted, txActive, redirecting, router]);
+  }, [receiptTs, redirecting, router]);
 
   function handleNext() {
     if (step === 1 && selectedCandidate) setStep(2);
