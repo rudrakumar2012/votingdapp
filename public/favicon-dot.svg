@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Simple geometric: diamond + circle (voting/blockchain) -->
+  <rect x="6" y="6" width="20" height="20" rx="4" fill="#1f2544" stroke="#81689d" stroke-width="2"/>
+  <path d="M16 10 L20 16 L16 22 L12 16 Z" fill="#ffd0ec"/>
+</svg>
