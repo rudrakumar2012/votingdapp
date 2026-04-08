@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Voting DApp",
   description: "On-chain voting application on Sepolia",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/apple-touch-icon.svg",
+    shortcut: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

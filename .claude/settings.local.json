@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npx hardhat:*)",
+      "Bash(node -e 'const p=require\\(\"./package.json\"\\); console.log\\(\"scripts:\", JSON.stringify\\(p.scripts||{}\\)\\)')",
+      "Bash(npm install:*)",
+      "Bash(node:*)",
+      "Bash(npx next:*)",
+      "Bash(npm ls:*)",
+      "Bash(SEPOLIA_RPC_URL=https://rpc.sepolia.org npx hardhat:*)",
+      "Bash(SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com npx hardhat:*)",
+      "Bash(npm run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m 'Build core components, voting page, results page, and voting hooks \\(Step 5\\):*)",
+      "Bash(git push:*)",
+      "Bash(git remote:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git commit:*)",
+      "Bash(pkill -f \"next dev\")",
+      "WebSearch",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(git checkout:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx tsx:*)",
+      "Bash(gh api:*)",
+      "Bash(git log:*)",
+      "Bash(git diff-tree:*)",
+      "Bash(ls:*)",
+      "Bash(rm:*)",
+      "Bash(rm -rf .next)",
+      "Bash(pkill -f \"next\")"
+    ]
+  }
+}

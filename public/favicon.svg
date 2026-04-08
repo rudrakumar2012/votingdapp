@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="15" fill="#1f2544"/>
+  <!-- Ballot box with checkmark -->
+  <rect x="8" y="9" width="16" height="14" rx="2" fill="none" stroke="#81689d" stroke-width="2"/>
+  <!-- Checkmark -->
+  <polyline points="10,16 14,20 22,12" fill="none" stroke="#ffd0ec" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

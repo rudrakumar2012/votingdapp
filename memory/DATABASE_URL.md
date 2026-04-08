@@ -1,0 +1,1 @@
+The app uses `.env.local` (not `.env`) for env vars at runtime. Both files have the same Neon DB `DATABASE_URL`. `.env` has the correct `NEXT_PUBLIC_CONTRACT_ADDRESS`, but `.env.local` had an old one — verified `.env.local` before making DB calls.
