@@ -58,7 +58,7 @@ export default function TxStatusModal({ status, txHash, candidateName, onClose, 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 sm:bg-black/60 sm:backdrop-blur-sm"
         onClick={onClose}
       >
         <motion.div

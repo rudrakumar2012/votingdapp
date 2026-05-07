@@ -6,6 +6,7 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import WalletConnectButton from "@/components/wallet/WalletConnectButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Vote, ExternalLink, History, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
@@ -181,10 +182,3 @@ export default function HistoryPage() {
   );
 }
 
-function Badge({ variant, className, children }: { variant: string; className?: string; children: React.ReactNode }) {
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full ${className}`}>
-      {children}
-    </span>
-  );
-}

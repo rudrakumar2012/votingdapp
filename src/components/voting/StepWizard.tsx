@@ -30,7 +30,7 @@ export default function StepWizard({ currentStep, totalSteps, labels }: StepWiza
               >
                 {isComplete ? "\u2713" : step}
               </div>
-              <Badge variant={isCurrent ? "default" : "outline"} className="text-[10px] px-2">
+              <Badge variant={isCurrent ? "default" : "outline"} className="text-[10px] sm:text-xs px-2">
                 {labels[i]}
               </Badge>
             </div>

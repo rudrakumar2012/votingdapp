@@ -117,7 +117,7 @@ function FloatingOrbs() {
   return (
     <>
       <motion.div
-        className="absolute top-20 left-10 w-40 h-40 bg-soft-purple/10 rounded-full blur-3xl"
+        className="absolute top-20 left-10 w-28 h-28 sm:w-40 sm:h-40 bg-soft-purple/10 rounded-full blur-3xl"
         animate={{
           x: [0, 30, -20, 0],
           y: [0, -20, 30, 0],
@@ -125,7 +125,7 @@ function FloatingOrbs() {
         transition={{ duration: 10, repeat: Infinity }}
       />
       <motion.div
-        className="absolute top-40 right-20 w-64 h-64 bg-light-pink/5 rounded-full blur-3xl"
+        className="absolute top-40 right-10 sm:right-20 w-40 h-40 sm:w-64 sm:h-64 bg-light-pink/5 rounded-full blur-3xl"
         animate={{
           x: [0, -25, 35, 0],
           y: [0, 35, -15, 0],
@@ -133,7 +133,7 @@ function FloatingOrbs() {
         transition={{ duration: 12, repeat: Infinity }}
       />
       <motion.div
-        className="absolute bottom-32 left-1/3 w-48 h-48 bg-muted-blue/10 rounded-full blur-3xl"
+        className="absolute bottom-32 left-1/4 sm:left-1/3 w-32 h-32 sm:w-48 sm:h-48 bg-muted-blue/10 rounded-full blur-3xl"
         animate={{
           x: [0, 20, -30, 0],
           y: [0, -30, 20, 0],
