@@ -206,7 +206,7 @@ export default function AdminDashboard() {
         <CardHeader>
           <CardTitle className="text-lg text-white">Session Status</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4 text-sm">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="space-y-1">
             <p className="text-muted-blue">Voting Active</p>
             <p className={`font-semibold ${votingActive ? "text-green-400" : "text-red-400"}`}>
@@ -271,7 +271,7 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* End Voting */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20 gap-3">
             <div className="space-y-1">
               <p className="text-white font-medium">End Voting</p>
               <p className="text-xs text-muted-blue">
@@ -284,6 +284,7 @@ export default function AdminDashboard() {
                 size="sm"
                 onClick={() => setShowEndConfirm(true)}
                 disabled={endVotingActive}
+                className="w-full sm:w-auto"
               >
                 <Flag className="w-4 h-4 mr-1" />
                 End Voting
@@ -296,8 +297,8 @@ export default function AdminDashboard() {
           </div>
 
           {/* Add Candidate */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20">
-            <div className="space-y-1 flex-1 mr-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20 gap-3">
+            <div className="space-y-1 w-full sm:flex-1 sm:mr-4">
               <p className="text-white font-medium">Add Candidate</p>
               <p className="text-xs text-muted-blue">
                 Add a new candidate to the election.
@@ -334,8 +335,8 @@ export default function AdminDashboard() {
           </div>
 
           {/* Sync Now */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20">
-            <div className="space-y-1 flex-1 mr-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-deep-navy/50 border border-muted-blue/20 gap-3">
+            <div className="space-y-1 w-full sm:flex-1 sm:mr-4">
               <p className="text-white font-medium">Sync from Chain</p>
               <p className="text-xs text-muted-blue">
                 Manually fetch VoteCast events from Sepolia and update the DB.
@@ -353,6 +354,7 @@ export default function AdminDashboard() {
               size="sm"
               onClick={syncNow}
               disabled={syncing}
+              className="w-full sm:w-auto"
             >
               <Database className="w-4 h-4 mr-1" />
               {syncing ? "Syncing..." : "Sync Now"}
@@ -484,7 +486,7 @@ export default function AdminDashboard() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-3 justify-end">
+              <div className="flex flex-col sm:flex-row gap-3 justify-end">
                 <Button variant="outline" onClick={() => setShowEndConfirm(false)} size="sm">
                   Cancel
                 </Button>
