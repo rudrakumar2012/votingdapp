@@ -61,21 +61,21 @@ export default function VoteReceipt({ txHash, candidateName, voterAddress, block
 
         <CardContent className="space-y-4">
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-2">
               <span className="text-muted-blue">Candidate</span>
-              <span className="text-white font-semibold">{candidateName}</span>
+              <span className="text-white font-semibold text-right">{candidateName}</span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-2">
               <span className="text-muted-blue">Voter</span>
-              <span className="text-soft-purple font-mono text-xs">{shortenAddress(voterAddress)}</span>
+              <span className="text-soft-purple font-mono text-xs text-right">{shortenAddress(voterAddress)}</span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-2">
               <span className="text-muted-blue">Block</span>
-              <span className="text-white font-mono text-xs">{blockNumber.toLocaleString()}</span>
+              <span className="text-white font-mono text-xs text-right">{blockNumber.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-2">
               <span className="text-muted-blue">Time</span>
-              <span className="text-white text-xs">{confirmedAt.toLocaleTimeString()}</span>
+              <span className="text-white text-xs text-right">{confirmedAt.toLocaleTimeString()}</span>
             </div>
             <div className="space-y-1">
               <span className="text-muted-blue">Transaction</span>

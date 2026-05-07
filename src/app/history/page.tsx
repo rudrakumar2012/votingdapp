@@ -90,7 +90,7 @@ export default function HistoryPage() {
   return (
     <div className="flex-1 flex flex-col">
       <Header activePage="history"  />
-      <div className="flex-1 max-w-xl mx-auto w-full px-6 py-6 space-y-6">
+      <div className="flex-1 max-w-xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6">
         <div className="flex items-center gap-3">
           <Link href="/voting">
             <Button variant="ghost" size="sm" className="text-muted-blue hover:text-light-pink">
@@ -142,7 +142,7 @@ export default function HistoryPage() {
               >
                 <Card className="border-muted-blue/30 bg-muted-blue/5 hover:border-soft-purple/40 transition-colors">
                   <CardContent className="py-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                       <div className="space-y-1">
                         <p className="font-semibold text-white">{r.candidateName}</p>
                         <a
@@ -158,7 +158,7 @@ export default function HistoryPage() {
                           Block {r.blockNumber.toLocaleString()}
                         </p>
                       </div>
-                      <div className="text-right space-y-1">
+                      <div className="text-left sm:text-right space-y-1 flex-shrink-0">
                         <Badge
                           variant="outline"
                           className="border-soft-purple/50 text-soft-purple text-xs"

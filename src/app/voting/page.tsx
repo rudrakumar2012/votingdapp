@@ -206,7 +206,7 @@ export default function VotingPage() {
     <div className="flex-1 flex flex-col">
       <Header activePage="voting" />
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-6 space-y-6">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6">
         {/* Countdown */}
         <CountdownTimer initialSeconds={remainingSeconds} />
 

@@ -86,7 +86,7 @@ export default function AdminPage() {
   return (
     <div className="flex-1 flex flex-col">
       <Header activePage="admin" />
-      <div className="flex-1 max-w-xl mx-auto w-full px-6 py-6">
+      <div className="flex-1 max-w-xl mx-auto w-full px-4 sm:px-6 py-6">
         <AdminDashboard />
       </div>
     </div>

@@ -63,7 +63,7 @@ export default function ResultsPage({ candidates, isEnded }: { candidates: Candi
             <CardContent className="text-center py-8">
               <Trophy className="w-12 h-12 text-soft-purple mx-auto mb-4" />
               <p className="text-xs uppercase tracking-widest text-light-pink mb-2">Winner</p>
-              <h3 className="text-4xl font-extrabold text-white mb-2">{winner.name}</h3>
+              <h3 className="text-2xl sm:text-4xl font-extrabold text-white mb-2">{winner.name}</h3>
               <p className="text-xl font-mono text-soft-purple">{winner.voteCount} votes</p>
               <p className="text-sm text-muted-blue mt-1">
                 {totalVotes > 0
@@ -76,7 +76,7 @@ export default function ResultsPage({ candidates, isEnded }: { candidates: Candi
         </motion.div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card>
           <CardContent className="text-center py-6 space-y-2">
             <Users className="w-6 h-6 text-muted-blue mx-auto" />

@@ -37,7 +37,7 @@ export default function ResultsPageWrapper() {
     <div className="flex-1 flex flex-col">
       <Header activePage="results" />
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-6">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-6">
         {votingActive && !isEnded && !showTable ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

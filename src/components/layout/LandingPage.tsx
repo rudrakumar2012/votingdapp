@@ -312,7 +312,7 @@ function CTASection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <h3 className="text-4xl font-bold text-white">Ready to Cast Your Vote?</h3>
+        <h3 className="text-2xl sm:text-4xl font-bold text-white">Ready to Cast Your Vote?</h3>
         <p className="text-muted-blue text-lg">
           Connect your wallet, choose your candidate, and make your voice heard on-chain.
         </p>
