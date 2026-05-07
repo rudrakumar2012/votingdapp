@@ -78,7 +78,7 @@ export default function HistoryPage() {
                   </p>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex justify-center">
                 <WalletConnectButton />
               </CardContent>
             </Card>
